@@ -9,23 +9,28 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    
+    public function __construct() {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
     #[ORM\Column(length: 255)]
     private ?string $title = null;
-
+    
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?User $User = null;
-
+    
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
+    
     public function getId(): ?int
     {
         return $this->id;
