@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -14,14 +15,20 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom est obligatoire')]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le prix est obligatoire')]
+    #[Assert\Positive(message: 'Le prix doit être un nombre positif')]
     private ?float $prix = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(min: 10, max: 30, minMessage: 'La description doit faire au moins 10 caractères et au plus 30 caractères')]
     private ?string $description = null;
+
+
 
     public function getId(): ?int
     {

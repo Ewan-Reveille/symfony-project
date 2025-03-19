@@ -20,10 +20,12 @@ class ProduitController extends AbstractController
 		$form = $this->createForm(ProductType::class, $produit);
 		$form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$entityManager->persist($produit);
-			$entityManager->flush();
-			return $this->redirectToRoute('produit_liste');
+		if ($form->isSubmitted()) {
+			if ($form->isValid()) {
+				$entityManager->persist($produit);
+				$entityManager->flush();
+				return $this->redirectToRoute('produit_liste');
+			}
 		}
 
 		return $this->render('produit/add.html.twig', [
@@ -32,9 +34,9 @@ class ProduitController extends AbstractController
 	}
 
 	#[Route('/produit', name: 'produit_liste')]
-	public function index(): Response
+	public function index(EntityManagerInterface $entityManager): Response
 	{
-		$produits = $entityManager->getRepository(Produit::class)->finAll();
+		$produits = $entityManager->getRepository(Produit::class)->findAll();
 		return $this->render('produit/list.html.twig', [
 			'produits' => $produits,
 		]);

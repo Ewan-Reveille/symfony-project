@@ -6,7 +6,7 @@
 <div class="container mt-5">
 	<h1>Ajouter un produit</h1>
 
-	{{ form_start(form) }}
+	{{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
 		<div class="mb-3">
 			{{ form_label(form.nom, 'Nom du Produit') }}
 			{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}

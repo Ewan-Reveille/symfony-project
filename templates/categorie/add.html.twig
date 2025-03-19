@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un produit{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Ajouter un produit</h1>
+
+    {{ form_start(form) }}
+
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom du produit') }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.nom) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.prix, 'Prix du produit') }}
+        {{ form_widget(form.prix, {'attr': {'class': 'form-control' ~ (form.prix.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.prix) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.description, 'Description du produit') }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}
