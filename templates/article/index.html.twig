@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+<h1>Latest articles</h1>
+
+{% if articles is not empty %}
+    <ul>
+    {% for article in articles %}
+        <li>
+            <strong>{{ article.title }}</strong>
+            <p> {{article.content}} </p>
+            {% if article.user is not empty %}
+                <p>Written by {{article.user}} </p>
+            {% else %}
+                <p>User is not defined</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+
+{% endif %}
+{% endblock %}
