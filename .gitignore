@@ -8,6 +8,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+<<<<<<< HEAD
 
 ###> phpunit/phpunit ###
 /phpunit.xml
@@ -23,3 +24,5 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+=======
+>>>>>>> sauvegarde

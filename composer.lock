@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "30f9340598bcbfa6ccf591418c010d57",
     "packages": [
         {
@@ -1694,6 +1695,11 @@
             "time": "2025-02-19T13:28:12+00:00"
         },
         {
+=======
+    "content-hash": "7fa7ba6bb5f8b40063b77f1ecd789779",
+    "packages": [
+        {
+>>>>>>> sauvegarde
             "name": "psr/cache",
             "version": "3.0.0",
             "source": {
@@ -1743,6 +1749,7 @@
             "time": "2021-02-03T23:26:27+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "psr/clock",
             "version": "1.0.0",
             "source": {
@@ -1791,6 +1798,8 @@
             "time": "2022-11-25T14:36:26+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -1894,6 +1903,7 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "psr/link",
             "version": "2.0.1",
             "source": {
@@ -1950,6 +1960,8 @@
             "time": "2021-03-11T23:00:27+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "psr/log",
             "version": "3.0.2",
             "source": {
@@ -2000,6 +2012,7 @@
             "time": "2024-09-11T13:17:53+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/asset",
             "version": "v7.2.0",
             "source": {
@@ -2148,6 +2161,8 @@
             "time": "2025-01-27T11:08:17+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/cache",
             "version": "v7.2.4",
             "source": {
@@ -2322,6 +2337,7 @@
             "time": "2024-09-25T14:20:29+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/clock",
             "version": "v7.2.0",
             "source": {
@@ -2396,6 +2412,8 @@
             "time": "2024-09-25T14:21:43+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/config",
             "version": "v7.2.3",
             "source": {
@@ -2711,6 +2729,7 @@
             "time": "2024-09-25T14:20:29+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/doctrine-bridge",
             "version": "v7.2.4",
             "source": {
@@ -2892,6 +2911,8 @@
             "time": "2025-01-07T09:39:55+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/dotenv",
             "version": "v7.2.0",
             "source": {
@@ -3197,6 +3218,7 @@
             "time": "2024-09-25T14:20:29+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/expression-language",
             "version": "v7.2.0",
             "source": {
@@ -3261,6 +3283,8 @@
             "time": "2024-10-15T11:52:45+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/filesystem",
             "version": "v7.2.0",
             "source": {
@@ -3459,6 +3483,7 @@
             "time": "2024-10-07T08:51:54+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/form",
             "version": "v7.2.4",
             "source": {
@@ -3556,6 +3581,8 @@
             "time": "2025-02-07T22:04:27+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/framework-bundle",
             "version": "v7.2.4",
             "source": {
@@ -3706,6 +3733,7 @@
             "time": "2025-02-26T08:19:39+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/http-client",
             "version": "v7.2.4",
             "source": {
@@ -3879,6 +3907,8 @@
             "time": "2024-12-07T08:49:48+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/http-foundation",
             "version": "v7.2.3",
             "source": {
@@ -4071,6 +4101,7 @@
             "time": "2025-02-26T11:01:22+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/intl",
             "version": "v7.2.0",
             "source": {
@@ -4784,6 +4815,8 @@
             "time": "2024-09-25T14:21:43+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/polyfill-intl-grapheme",
             "version": "v1.31.0",
             "source": {
@@ -4862,6 +4895,7 @@
             "time": "2024-09-09T11:45:10+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/polyfill-intl-icu",
             "version": "v1.31.0",
             "source": {
@@ -5029,6 +5063,8 @@
             "time": "2024-09-09T11:45:10+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/polyfill-intl-normalizer",
             "version": "v1.31.0",
             "source": {
@@ -5266,6 +5302,7 @@
             "time": "2024-09-09T11:45:10+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/process",
             "version": "v7.2.4",
             "source": {
@@ -5488,6 +5525,8 @@
             "time": "2025-01-27T11:08:17+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/routing",
             "version": "v7.2.3",
             "source": {
@@ -5648,6 +5687,7 @@
             "time": "2024-12-29T21:39:47+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/security-bundle",
             "version": "v7.2.3",
             "source": {
@@ -6097,6 +6137,8 @@
             "time": "2025-02-24T10:49:57+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/service-contracts",
             "version": "v3.5.1",
             "source": {
@@ -6180,6 +6222,7 @@
             "time": "2024-09-25T14:20:29+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/stimulus-bundle",
             "version": "v2.23.0",
             "source": {
@@ -6311,6 +6354,8 @@
             "time": "2025-02-24T10:49:57+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/string",
             "version": "v7.2.0",
             "source": {
@@ -6398,6 +6443,7 @@
             "time": "2024-11-13T13:31:26+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/translation",
             "version": "v7.2.4",
             "source": {
@@ -7035,6 +7081,8 @@
             "time": "2025-02-21T09:47:16+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/var-dumper",
             "version": "v7.2.3",
             "source": {
@@ -7194,6 +7242,7 @@
             "time": "2025-02-13T10:27:23+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/web-link",
             "version": "v7.2.0",
             "source": {
@@ -7277,6 +7326,8 @@
             "time": "2024-09-25T14:21:43+00:00"
         },
         {
+=======
+>>>>>>> sauvegarde
             "name": "symfony/yaml",
             "version": "v7.2.3",
             "source": {
@@ -7347,6 +7398,7 @@
                 }
             ],
             "time": "2025-01-07T12:55:42+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "twig/extra-bundle",
@@ -9999,6 +10051,11 @@
             "time": "2024-03-03T12:36:25+00:00"
         }
     ],
+=======
+        }
+    ],
+    "packages-dev": [],
+>>>>>>> sauvegarde
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
@@ -10010,5 +10067,9 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
+<<<<<<< HEAD
     "plugin-api-version": "2.6.0"
+=======
+    "plugin-api-version": "2.3.0"
+>>>>>>> sauvegarde
 }
