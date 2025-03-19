@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "doctrine/doctrine-bundle": {
         "version": "2.13",
         "recipe": {
@@ -67,6 +68,8 @@
             "importmap.php"
         ]
     },
+=======
+>>>>>>> 1a43105 (Add initial set of files)
     "symfony/console": {
         "version": "7.2",
         "recipe": {
@@ -79,6 +82,7 @@
             "bin/console"
         ]
     },
+<<<<<<< HEAD
     "symfony/debug-bundle": {
         "version": "7.2",
         "recipe": {
@@ -93,6 +97,10 @@
     },
     "symfony/flex": {
         "version": "2.5",
+=======
+    "symfony/flex": {
+        "version": "2.4",
+>>>>>>> 1a43105 (Add initial set of files)
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -104,6 +112,7 @@
             ".env.dev"
         ]
     },
+<<<<<<< HEAD
     "symfony/form": {
         "version": "7.2",
         "recipe": {
@@ -116,6 +125,8 @@
             "config/packages/csrf.yaml"
         ]
     },
+=======
+>>>>>>> 1a43105 (Add initial set of files)
     "symfony/framework-bundle": {
         "version": "7.2",
         "recipe": {
@@ -135,6 +146,7 @@
             "src/Kernel.php"
         ]
     },
+<<<<<<< HEAD
     "symfony/mailer": {
         "version": "7.2",
         "recipe": {
@@ -207,6 +219,8 @@
             "tests/bootstrap.php"
         ]
     },
+=======
+>>>>>>> 1a43105 (Add initial set of files)
     "symfony/routing": {
         "version": "7.2",
         "recipe": {
@@ -219,6 +233,7 @@
             "config/packages/routing.yaml",
             "config/routes.yaml"
         ]
+<<<<<<< HEAD
     },
     "symfony/security-bundle": {
         "version": "7.2",
@@ -310,5 +325,7 @@
     },
     "twig/extra-bundle": {
         "version": "v3.20.0"
+=======
+>>>>>>> 1a43105 (Add initial set of files)
     }
 }
