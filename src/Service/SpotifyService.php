@@ -50,10 +50,11 @@ class SpotifyService
             'query' => [
                 'q' => $artistName,
                 'type' => 'artist',
-                'limit' => 1
+                'limit' => 5
             ]
         ]);
 
         return $response->toArray();
     }
+    
 }

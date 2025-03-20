@@ -1,0 +1,72 @@
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">Music App</h1>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ path('search_artists') }}" method="get" class="form-inline">
+                            <input type="text" name="query" id="search-query" class="form-control" placeholder="Search artists" autocomplete="off">
+                            <div id="search-results" class="dropdown-menu" style="max-height: 300px; overflow-y: auto; display: none;"></div>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchQuery = document.getElementById('search-query');
+    const searchResults = document.getElementById('search-results');
+    const searchForm = document.querySelector('form');
+
+    searchQuery.addEventListener('input', function () {
+        const query = searchQuery.value.trim();
+        
+        if (query.length < 3) {
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        fetch(`/spotify/search?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(artist => {
+                        const li = document.createElement('li');
+                        li.classList.add('dropdown-item');
+                        li.innerHTML = `
+                            <a href="${artist.url}" class="d-flex align-items-center">
+                                <img src="${artist.image}" alt="${artist.name}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                                <span>${artist.name}</span>
+                                <span class="ml-auto">(${artist.followers})</span>
+                            </a>
+                        `;
+                        searchResults.appendChild(li);
+                    });
+                    searchResults.style.display = 'block';
+                } else {
+                    searchResults.style.display = 'none';
+                }
+            });
+    });
+
+    searchForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+    });
+
+    searchResults.addEventListener('click', function (event) {
+        const clickedElement = event.target.closest('a');
+        if (clickedElement) {
+            window.location.href = clickedElement.href;
+        }
+    });
+});
+</script>
