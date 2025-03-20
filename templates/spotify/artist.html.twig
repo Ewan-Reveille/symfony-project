@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ name }} - Spotify{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-body text-center">
+                        <h1 class="card-title">{{ name }}</h1>
+
+                        {% if image %}
+                            <img src="{{ image }}" alt="{{ name }}'s image" class="img-fluid rounded-circle mb-4" style="max-width: 300px;"/>
+                        {% else %}
+                            <p class="text-muted">No image available</p>
+                        {% endif %}
+
+                        <p><strong>Genre:</strong> {{ description }}</p>
+                        <p><strong>Followers:</strong> {{ followers | number_format }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
