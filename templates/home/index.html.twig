@@ -9,12 +9,22 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/ewan/Documents/MDS/B3/Dev/symfony-project/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/home/ewan/Documents/MDS/B3/Dev/symfony-project/templates/home/index.html.twig</code></li>
-    </ul>
+    <h1>AIA blog</h1>
+    <h2>Nos articles les plus likés</h2>
+    {% if mostLikedArticles is not empty %}
+        <ul>
+            {% for article in mostLikedArticles %}
+                <li>
+                    <h3>{{ article.title }}</h3>
+                    <p><strong>Artist:</strong> {{ article.artist or 'N/A' }}</p>
+                    <p>{{ article.content[:150] }}...</p>
+                    <p><strong>Likes:</strong> {{ article.likes }}</p>
+                    <p><a href="{{ path('app_article', { 'slug': article.slug }) }}">Read More</a></p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No articles available.</p>
+    {% endif %}
 </div>
 {% endblock %}

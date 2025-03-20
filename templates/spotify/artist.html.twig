@@ -1,26 +1,41 @@
-{% extends 'base.html.twig' %}
+{# templates/spotify/artist.html.twig #}
 
-{% block title %}{{ name }} - Spotify{% endblock %}
+<h1>{{ name }}</h1>
+<img src="{{ image }}" alt="{{ name }} image" />
+<p>Gender: {{ description }}</p>
+<p>{{ followers }} followers</p>
 
-{% block body %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-lg">
-                    <div class="card-body text-center">
-                        <h1 class="card-title">{{ name }}</h1>
+<h2>Articles about {{ name }}</h2>
 
-                        {% if image %}
-                            <img src="{{ image }}" alt="{{ name }}'s image" class="img-fluid rounded-circle mb-4" style="max-width: 300px;"/>
-                        {% else %}
-                            <p class="text-muted">No image available</p>
-                        {% endif %}
+{% if articles is not empty %}
+    <ul>
+    {% for article in articles %}
+        <li>
+            <a href="{{ path('app_article_show', {'slug': article.slug}) }}">{{ article.title }}</a>
+            <p>{{ article.content|slice(0, 100) }}...</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No articles available for this artist.</p>
+{% endif %}
 
-                        <p><strong>Genre:</strong> {{ description }}</p>
-                        <p><strong>Followers:</strong> {{ followers | number_format }}</p>
-                    </div>
-                </div>
-            </div>
+{% if app.user %}
+    <h3>Create an Article about {{ name }}</h3>
+    <form action="{{ path('app_create_article', {'artistName': name}) }}" method="POST">
+        <div>
+            <label for="title">Article Title:</label>
+            <input type="text" id="title" name="title" required />
         </div>
-    </div>
-{% endblock %}
+
+        <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" rows="5" required></textarea>
+        </div>
+
+        <button type="submit">Create Article</button>
+    </form>
+{% else %}
+    <p>You must be logged in to create an article.</p>
+    <a href={{ path('app_login')}}>Login here</a>
+{% endif %}
