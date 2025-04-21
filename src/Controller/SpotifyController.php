@@ -12,18 +12,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 final class SpotifyController extends AbstractController
 {
     private SpotifyService $spotifyService;
     private ArticleRepository $articleRepository;
     private UserRepository $userRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(SpotifyService $spotifyService, ArticleRepository $articleRepository, UserRepository $userRepository)
+    public function __construct(SpotifyService $spotifyService, ArticleRepository $articleRepository, UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
         $this->spotifyService = $spotifyService;
         $this->articleRepository = $articleRepository;
         $this->userRepository = $userRepository;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/spotify/artist/{name}', name: 'app_spotify')]
@@ -62,17 +65,21 @@ final class SpotifyController extends AbstractController
         $title = $request->request->get('title');
         $content = $request->request->get('content');
 
+        $slug = str_replace(' ', '-', $title);
+        $slug = strtolower($slug);
+        $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
+
         $article = new Article();
         $article->setTitle($title);
         $article->setContent($content);
         $article->setArtist($artistName);
         $article->setUser($user);
+        $article->setSlug($slug);
         $article->setLikes(0);
         $article->setCreatedAt(new \DateTimeImmutable());
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($article);
-        $em->flush();
+        $this->entityManager->persist($article);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('app_spotify', ['name' => $artistName]);
     }

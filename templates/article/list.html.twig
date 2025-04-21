@@ -1,0 +1,17 @@
+<div class="container my-5">
+    <h1 class="h2 mb-4">Liste des Articles</h1>
+
+    {% if articles is not empty %}
+        <div class="list-group">
+            {% for article in articles %}
+                <a href="{{ path('app_article', {'slug': article.slug}) }}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ article.title }}</h5>
+                    <p class="mb-1">{{ article.content|slice(0, 100) }}...</p>
+                    <small>Publié le {{ article.createdAt|date('d F Y') }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun article disponible.</p>
+    {% endif %}
+</div>

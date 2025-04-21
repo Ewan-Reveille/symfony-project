@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="card shadow-sm rounded-2xl">
+        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+            <h1 class="h2 mb-0">{{ article.title }}</h1>
+            <small class="text-muted">{{ article.createdAt | date('d F Y') }}</small>
+        </div>
+        <div class="card-body">
+            <div class="mb-3 text-secondary">
+                <span>Auteur&nbsp;: {{ article.user.email }}</span>
+                {% if article.artist %}
+                    &nbsp;|&nbsp;<span>Artiste&nbsp;: {{ article.artist }}</span>
+                {% endif %}
+                &nbsp;|&nbsp;<span>{{ article.likes }} like{{ article.likes > 1 ? 's' }}</span>
+            </div>
+            <div class="article-content mb-4">
+                {{ article.content | raw }}
+            </div>
+
+            {# Actions selon l'utilisateur connecté #}
+            <div class="d-flex gap-2">
+                {% if app.user and app.user.id == article.user.id %}
+                    <a href="{{ path('app_article_edit', {'slug': article.slug}) }}" class="btn btn-primary">Modifier</a>
+                    <form action="{{ path('app_article_delete', {'slug': article.slug}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                {% elseif app.user %}
+                    <form action="{{ path('app_article_like', {'slug': article.slug}) }}" method="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token('like' ~ article.id) }}">
+                        <button type="submit" class="btn btn-outline-success">J'aime</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-4">&larr; Retour aux articles</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

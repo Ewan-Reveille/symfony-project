@@ -3,27 +3,51 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<h1>Inscription</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Inscription</h1>
 
-{{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-    {{ form_row(form.email) }}
-    {{ form_errors(form.email) }}
+    {{ form_start(form, {'attr': {'data-turbo': 'false', 'class': 'needs-validation', 'novalidate': 'true'}}) }}
     
-    {{ form_row(form.password) }}
-    {{ form_errors(form.password) }}
-    
-    {{ form_row(form.nom) }}
-    {{ form_errors(form.nom) }}
-    
-    {{ form_row(form.prenom) }}
-    {{ form_errors(form.prenom) }}
-    
-    {{ form_row(form.birth_date) }}
-    {{ form_errors(form.birth_date) }}
-    
-    {{ form_row(form.roles) }}
-    {{ form_errors(form.roles) }}
-    <button type="submit" class="btn btn-primary">S'inscrire</button>
-{{ form_end(form) }}
+    <div class="mb-3">
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.email, {'attr': {'class': 'text-danger'}}) }}
+    </div>
 
+    <div class="mb-3">
+        {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.password, {'attr': {'class': 'text-danger'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom, {'attr': {'class': 'text-danger'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.prenom, {'attr': {'class': 'text-danger'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.birth_date, 'Date de naissance', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.birth_date, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.birth_date, {'attr': {'class': 'text-danger'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.roles, 'Rôle', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.roles, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.roles, {'attr': {'class': 'text-danger'}}) }}
+    </div>
+
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </div>
+    
+    {{ form_end(form) }}
+</div>
 {% endblock %}

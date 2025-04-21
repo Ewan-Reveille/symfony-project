@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+<div class="container text-center my-5">
+    <h1 class="display-4 text-danger">404 - Page introuvable</h1>
+    <p class="lead">L’article que vous cherchez n’existe pas ou a été supprimé.</p>
+
+    <a href="{{ path('app_home') }}" class="btn btn-primary mt-3">
+        ← Retour à la liste des articles
+    </a>
+</div>
+{% endblock %}

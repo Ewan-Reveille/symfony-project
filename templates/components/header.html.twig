@@ -1,23 +1,36 @@
-<header class="bg-dark text-white py-3">
+<header class="bg-dark text-white py-3 shadow-sm">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="h3 mb-0">Music App</h1>
-            <nav>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="{{ path('search_artists') }}" method="get" class="form-inline">
-                            <input type="text" name="query" id="search-query" class="form-control" placeholder="Search artists" autocomplete="off">
-                            <div id="search-results" class="dropdown-menu" style="max-height: 300px; overflow-y: auto; display: none;"></div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <!-- Logo / Title -->
+            <h1 class="h3 mb-0">Music Blog</h1>
+
+            <!-- Navigation Center -->
+            <nav class="flex-grow-1" style="width: 100%; max-width: 300px;">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item w-100">
+                        <form action="{{ path('search_artists') }}" method="get" class="position-relative d-flex align-items-center">
+                            <input type="text" name="query" id="search-query" class="form-control rounded-pill" placeholder="Search artists" autocomplete="off">
+                            <ul id="search-results" class="dropdown-menu w-100 shadow mt-1" style="position: absolute; top: 100%; left: 0; display: none; z-index: 1000; max-height: 300px; overflow-y: auto;"></ul>
                         </form>
                     </li>
                 </ul>
             </nav>
+
+
+            <!-- Auth Links / User Info -->
+            <div class="d-flex align-items-center gap-2">
+                {% if not app.user %}
+                    <a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_login') }}">Login</a>
+                    <a class="btn btn-primary btn-sm px-3" href="{{ path('app_register') }}">Register</a>
+                {% else %}
+                    <span class="text-white me-2">Hello, <strong>{{ app.user.email }}</strong></span>
+                    <a href="{{ path('app_logout') }}" class="btn btn-outline-light btn-sm px-3">Logout</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </header>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

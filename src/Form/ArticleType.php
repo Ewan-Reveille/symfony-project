@@ -17,15 +17,6 @@ class ArticleType extends AbstractType
             ->add('title')
             ->add('slug')
             ->add('content')
-            ->add('likes')
-            ->add('artist')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 
