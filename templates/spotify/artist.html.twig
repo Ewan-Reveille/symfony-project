@@ -18,6 +18,9 @@
     <p>No articles available for this artist.</p>
 {% endif %}
 
+<form action="{{ path('export_artist_pdf', {'name': name}) }}" method="POST">
+    <button type="submit">📄 Export this artist as PDF</button>
+</form>
 {% if app.user %}
     <h3>Create an Article about {{ name }}</h3>
     <form action="{{ path('app_create_article', {'artistName': name}) }}" method="POST">

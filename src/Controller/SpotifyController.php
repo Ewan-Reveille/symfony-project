@@ -87,18 +87,14 @@ final class SpotifyController extends AbstractController
     #[Route("/spotify/search", name:"search_artists")]
     public function search(Request $request): JsonResponse
     {
-        // Get the search query from the request
         $query = $request->query->get('query', '');
 
-        // If no query is provided, return an empty result
         if (!$query) {
             return new JsonResponse([]);
         }
 
-        // Fetch the artists from Spotify
         $artists = $this->spotifyService->getArtist($query);
 
-        // Map the artist data to the format needed for the response
         $results = array_map(function ($artist) {
             return [
                 'name' => $artist['name'],
@@ -108,7 +104,6 @@ final class SpotifyController extends AbstractController
             ];
         }, $artists['artists']['items']);
 
-        // Return the artist search results as JSON
         return new JsonResponse($results);
     }
 }
