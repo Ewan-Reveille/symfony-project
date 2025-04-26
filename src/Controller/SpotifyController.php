@@ -62,7 +62,6 @@ final class SpotifyController extends AbstractController
         }
 
         $user = $this->getUser();
-
         $title = $request->request->get('title');
         $content = $request->request->get('content');
 
@@ -76,22 +75,21 @@ final class SpotifyController extends AbstractController
         $article->setArtist($artistName);
         $article->setUser($user);
         $article->setSlug($slug);
+
+        $article->setCreatedAt(new \DateTimeImmutable());
+
         $like = new ArticleLike();
         $like->setArticle($article);
         $like->setUser($user);
 
+        $this->entityManager->persist($article);
         $this->entityManager->persist($like);
-        $this->entityManager->persist($article);
-        $this->entityManager->flush();
 
-
-        $article->setCreatedAt(new \DateTimeImmutable());
-
-        $this->entityManager->persist($article);
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_spotify', ['name' => $artistName]);
     }
+
 
     #[Route("/spotify/search", name:"search_artists")]
     public function search(Request $request): JsonResponse

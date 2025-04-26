@@ -22,7 +22,7 @@
             </div>
 
             <div class="d-flex gap-2">
-                {% if app.user and app.user.id == article.user.id %}
+                {% if app.user and (app.user.id == article.user.id or 'ROLE_ADMIN' in app.user.roles) %}
                     <a href="{{ path('app_article_edit', {'slug': article.slug}) }}" class="btn btn-primary">Modifier</a>
                     <form action="{{ path('app_article_delete', {'slug': article.slug}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">

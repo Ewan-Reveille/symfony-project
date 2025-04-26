@@ -22,12 +22,26 @@ class ArticleController extends AbstractController
         $this->spotifyService = $spotifyService;
     }
 
+    #[Route('/article/list', name: 'app_article_list')]
+    public function list(ArticleRepository $articleRepository): Response
+    {
+        $articles = $articleRepository->findAll();
+
+        return $this->render('article/list.html.twig', [
+            'articles' => $articles,
+        ]);
+    }
+    
     #[Route('/article/{slug}', name: 'app_article')]
     public function show(string $slug, ArticleRepository $articleRepository): Response
     {
         $artistData = null;
         $article = $articleRepository->findOneBy(['slug' => $slug]);
 
+        if (!$article) {
+            return $this->redirectToRoute('app_article_list');
+        }
+    
         if ($article->getArtist()) {
             $spotifyArtist = $this->spotifyService->getArtist($article->getArtist());
 
@@ -61,7 +75,7 @@ class ArticleController extends AbstractController
 
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            throw $this->createNotFoundException('Article not found');
+            return $this->redirectToRoute('app_article_list');
         }
 
         // 1. Vérifie si déjà liké
@@ -95,7 +109,7 @@ class ArticleController extends AbstractController
         $article = $articleRepository->findOneBy(['slug' => $slug]);
 
         if (!$article) {
-            throw $this->createNotFoundException('Article not found');
+            return $this->redirectToRoute('app_article_list');
         }
 
         $form = $this->createForm(ArticleType::class, $article);
@@ -137,19 +151,7 @@ class ArticleController extends AbstractController
         return $this->render('article/noarticle.html.twig');
     }
 
-    #[Route('/article/list', name: 'app_article_list')]
-    public function list(ArticleRepository $articleRepository): Response
-    {
-        $articles = $articleRepository->findAll();
 
-        if (!$articles) {
-            return $this->redirectToRoute('app_article_absent');
-        }
-
-        return $this->render('article/list.html.twig', [
-            'articles' => $articles,
-        ]);
-    }
 
     #[Route('/article/{slug}/export-pdf', name: 'app_article_export_pdf')]
     public function exportPdf(
@@ -160,7 +162,7 @@ class ArticleController extends AbstractController
         $article = $articleRepository->findOneBy(['slug' => $slug]);
 
         if (!$article) {
-            throw $this->createNotFoundException('Article not found');
+            return $this->redirectToRoute('app_article_list');
         }
 
         $artistData = null;
@@ -179,19 +181,16 @@ class ArticleController extends AbstractController
             }
         }
 
-        // Générer le HTML
         $html = $this->renderView('pdf/article.html.twig', [
             'article' => $article,
             'artist' => $artistData,
         ]);
 
-        // Transformer le HTML en PDF
         $pdf = new \Dompdf\Dompdf();
         $pdf->loadHtml($html);
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
 
-        // Retourner le PDF en téléchargement direct
         return new Response(
             $pdf->output(),
             200,
