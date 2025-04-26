@@ -15,6 +15,10 @@ use App\Entity\ArticleLike;
 use App\Entity\User;
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Message\GeneratePdfMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 class ArticleController extends AbstractController
 {
     private SpotifyService $spotifyService;
@@ -34,7 +38,7 @@ class ArticleController extends AbstractController
     }
     
     #[Route('/article/{slug}', name: 'app_article')]
-    public function show(string $slug, ArticleRepository $articleRepository, Request $request, EntityManagerInterface $em): Response
+    public function show(string $slug, ArticleRepository $articleRepository, Request $request, EntityManagerInterface $em, SessionInterface $session): Response
     {
         $artistData = null;
         $article = $articleRepository->findOneBy(['slug' => $slug]);
@@ -77,11 +81,18 @@ class ArticleController extends AbstractController
 
             return $this->redirectToRoute('app_article', ['slug' => $slug]);
         }
-
+        $pdfFilename = sprintf('article_%d.pdf', $article->getId());
+        $pdfPath     = $this->getParameter('kernel.project_dir') . '/public/pdfs/' . $pdfFilename;
+        $pdfExists   = file_exists($pdfPath);
+        $generationRequested = $session->get('pdf_generation_requested_' . $article->getId(), false);
+         
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'artist' => $artistData,
             'form' => $form->createView(),
+            'pdfExists' => $pdfExists,
+            'pdfFilename' => $pdfFilename,
+            'generationRequested' => $generationRequested,
         ]);
     }
 
@@ -179,48 +190,41 @@ class ArticleController extends AbstractController
     public function exportPdf(
         string $slug,
         ArticleRepository $articleRepository,
-        SpotifyService $spotifyService
+        MessageBusInterface $bus,
+        Request $request,
+        SessionInterface $session
     ): Response {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
-
         if (!$article) {
             return $this->redirectToRoute('app_article_list');
         }
 
-        $artistData = null;
-        if ($article->getArtist()) {
-            $spotifyArtist = $spotifyService->getArtist($article->getArtist());
+        if (!$this->isCsrfTokenValid('generate-pdf' . $article->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+        
+        $bus->dispatch(new GeneratePdfMessage('article', (string) $article->getId()));
 
-            if (!empty($spotifyArtist['artists']['items'])) {
-                $artist = $spotifyArtist['artists']['items'][0];
+        $session->set('pdf_generation_requested_' . $article->getId(), true);
 
-                $artistData = [
-                    'name' => $artist['name'],
-                    'image' => $artist['images'][0]['url'] ?? null,
-                    'description' => $artist['genres'][0] ?? 'No description available',
-                    'followers' => $artist['followers']['total'],
-                ];
-            }
+        $this->addFlash('info', 'La génération du PDF a démarré.');
+
+        $this->addFlash('info', 'La génération du PDF a été mise en file d’attente. Vous pourrez le télécharger bientôt.');
+
+        return $this->redirectToRoute('app_article', ['slug' => $slug]);
+    }
+
+    #[Route('/pdfs/article/{id}', name: 'app_pdf_download')]
+    public function downloadPdf(int $id): Response
+    {
+        $filename = "article_{$id}.pdf";
+        $path     = $this->getParameter('kernel.project_dir') . "/public/pdfs/{$filename}";
+
+        if (!file_exists($path)) {
+            throw $this->createNotFoundException('PDF non trouvé. Génération toujours en cours ?');
         }
 
-        $html = $this->renderView('pdf/article.html.twig', [
-            'article' => $article,
-            'artist' => $artistData,
-        ]);
-
-        $pdf = new \Dompdf\Dompdf();
-        $pdf->loadHtml($html);
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
-
-        return new Response(
-            $pdf->output(),
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="article.pdf"',
-            ]
-        );
+        return $this->file($path, $filename);
     }
 
 }

@@ -57,6 +57,23 @@
                 <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour commenter.</p>
             {% endif %}
 
+            {% if app.user %}
+                {% if pdfExists %}
+                    <a href="{{ asset('pdfs/' ~ pdfFilename) }}" class="btn btn-outline-secondary">
+                        Télécharger le PDF
+                    </a>
+                {% elseif generationRequested %}
+                    <p class="text-muted">PDF en cours de génération… Revenez dans quelques instants.</p>
+                {% else %}
+                    <form action="{{ path('app_article_export_pdf', { slug: article.slug }) }}" method="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
+                        <button type="submit" class="btn btn-outline-primary">
+                            Créer un PDF
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
 
             <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-4">&larr; Retour aux articles</a>
         </div>
