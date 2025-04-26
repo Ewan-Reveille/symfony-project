@@ -70,6 +70,33 @@ class GeneratePdfMessageHandler
             throw new \RuntimeException("Article not found with ID $id.");
         }
 
-        return $this->twig->render('pdf/article.html.twig', ['article' => $article]);
+        if ($article->getArtist()) {
+            $spotifyArtist = $this->spotifyService->getArtist($article->getArtist());
+        
+            if (!empty($spotifyArtist['artists']['items'])) {
+                $artist = $spotifyArtist['artists']['items'][0];
+                $imageUrl = $artist['images'][0]['url'] ?? null;
+                $imageBase64 = null;
+                // Here, imageURL doesn't work when fetched, so I have to convert it before adding it to the PDF
+                if ($imageUrl) {
+                    try {
+                        $imageContents = file_get_contents($imageUrl);
+                        $mimeType = finfo_buffer(finfo_open(), $imageContents, FILEINFO_MIME_TYPE);
+                        $imageBase64 = 'data:' . $mimeType . ';base64,' . base64_encode($imageContents);
+                    } catch (\Throwable $e) {
+                        $imageBase64 = null;
+                    }
+                }
+
+                $artistData = [
+                    'name' => $artist['name'],
+                    'image' => $imageBase64,
+                    'description' => $artist['genres'][0] ?? 'No description available',
+                    'followers' => $artist['followers']['total'],
+                ];
+            }
+        }
+        
+        return $this->twig->render('pdf/article.html.twig', ['article' => $article, 'artist' => $artistData ?? null]);
     }
 }

@@ -19,7 +19,10 @@ class ArticleRepository extends ServiceEntityRepository
     public function findMostLiked(int $limit = 5)
     {
         return $this->createQueryBuilder('a')
-            ->orderBy('a.likes', 'DESC')
+            ->leftJoin('a.articleLikes', 'al')
+            ->addSelect('COUNT(al.id) AS HIDDEN likeCount')
+            ->groupBy('a.id')
+            ->orderBy('likeCount', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();

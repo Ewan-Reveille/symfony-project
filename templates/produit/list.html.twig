@@ -27,10 +27,6 @@
                         <td>{{ produit.nom }}</td>
                         <td>{{ produit.description }}</td>
                         <td>{{ produit.prix }} €</td>
-                        <td>
-                            {# <a href="{{ path('modifier_produit', {'id': produit.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                            <a href="{{ path('supprimer_produit', {'id': produit.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</a> #}
-                        </td>
                     </tr>
                 {% else %}
                     <tr>

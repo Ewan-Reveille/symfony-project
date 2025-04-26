@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\ArticleLike;
 
 final class SpotifyController extends AbstractController
 {
@@ -75,7 +76,15 @@ final class SpotifyController extends AbstractController
         $article->setArtist($artistName);
         $article->setUser($user);
         $article->setSlug($slug);
-        $article->setLikes(0);
+        $like = new ArticleLike();
+        $like->setArticle($article);
+        $like->setUser($user);
+
+        $this->entityManager->persist($like);
+        $this->entityManager->persist($article);
+        $this->entityManager->flush();
+
+
         $article->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($article);

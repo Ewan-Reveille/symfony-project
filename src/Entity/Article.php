@@ -5,10 +5,24 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    /**
+     * @var Collection<int, ArticleLike>
+     */
+    
+    public function __construct()
+    {
+        $this->articleLikes = new ArrayCollection();
+    }
+    
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleLike::class, orphanRemoval: true)]
+    private Collection $articleLikes;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,9 +39,6 @@ class Article
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?User $user = null;
-
-    #[ORM\Column]
-    private ?int $likes = null;
 
     #[ORM\Column(length: 255, nullable:true)]
     private ?string $artist = null;
@@ -88,17 +99,11 @@ class Article
         return $this;
     }
 
-    public function getLikes(): ?int
+    public function getLikesCount(): int
     {
-        return $this->likes;
+        return $this->articleLikes->count();
     }
 
-    public function setLikes(int $likes): static
-    {
-        $this->likes = $likes;
-
-        return $this;
-    }
 
     public function getArtist(): ?string
     {
@@ -122,5 +127,16 @@ class Article
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    public function isLikedByUser(User $user): bool
+    {
+        foreach ($this->articleLikes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

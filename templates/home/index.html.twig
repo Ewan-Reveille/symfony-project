@@ -18,7 +18,7 @@
                     <h3>{{ article.title }}</h3>
                     <p><strong>Artist:</strong> {{ article.artist or 'N/A' }}</p>
                     <p>{{ article.content[:150] }}...</p>
-                    <p><strong>Likes:</strong> {{ article.likes }}</p>
+                    <p><strong>Likes:</strong> {{ article.getLikesCount() }}</p>
                     <p><a href="{{ path('app_article', { 'slug': article.slug }) }}">Read More</a></p>
                 </li>
             {% endfor %}
