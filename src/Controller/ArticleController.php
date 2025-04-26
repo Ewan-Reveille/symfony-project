@@ -13,7 +13,8 @@ use App\Service\SpotifyService;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Entity\ArticleLike;
 use App\Entity\User;
-
+use App\Entity\Comment;
+use App\Form\CommentType;
 class ArticleController extends AbstractController
 {
     private SpotifyService $spotifyService;
@@ -33,7 +34,7 @@ class ArticleController extends AbstractController
     }
     
     #[Route('/article/{slug}', name: 'app_article')]
-    public function show(string $slug, ArticleRepository $articleRepository): Response
+    public function show(string $slug, ArticleRepository $articleRepository, Request $request, EntityManagerInterface $em): Response
     {
         $artistData = null;
         $article = $articleRepository->findOneBy(['slug' => $slug]);
@@ -57,9 +58,30 @@ class ArticleController extends AbstractController
             }
         }
 
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $comment->setArticle($article);
+            $comment->setUser($user);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+
+            $em->persist($comment);
+            $em->flush();
+
+            $this->addFlash('success', 'Commentaire ajouté !');
+
+            return $this->redirectToRoute('app_article', ['slug' => $slug]);
+        }
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'artist' => $artistData,
+            'form' => $form->createView(),
         ]);
     }
 

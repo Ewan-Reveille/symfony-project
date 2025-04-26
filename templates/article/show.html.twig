@@ -37,6 +37,27 @@
                 {% endif %}
             </div>
 
+            <h2>Commentaires</h2>
+
+            {% for comment in article.comments %}
+                <div class="comment">
+                    <strong>{{ comment.user.email }}</strong> — <em>{{ comment.createdAt|date('d/m/Y H:i') }}</em>
+                    <p>{{ comment.content }}</p>
+                </div>
+            {% else %}
+                <p>Pas encore de commentaire.</p>
+            {% endfor %}
+
+            {% if app.user %}
+                {{ form_start(form) }}
+                    {{ form_row(form.content) }}
+                    <button type="submit">Poster mon commentaire</button>
+                {{ form_end(form) }}
+            {% else %}
+                <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour commenter.</p>
+            {% endif %}
+
+
             <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-4">&larr; Retour aux articles</a>
         </div>
     </div>

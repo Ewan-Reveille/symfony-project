@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\ArticleLike;
+use App\Service\SluggerService;
 
 final class SpotifyController extends AbstractController
 {
@@ -55,7 +56,7 @@ final class SpotifyController extends AbstractController
     }
 
     #[Route('/spotify/artist/{artistName}/create-article', name: 'app_create_article', methods: ['POST'])]
-    public function createArticle(Request $request, string $artistName): RedirectResponse
+    public function createArticle(Request $request, string $artistName, SluggerService $sluggerService): RedirectResponse
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
@@ -74,6 +75,8 @@ final class SpotifyController extends AbstractController
         $article->setContent($content);
         $article->setArtist($artistName);
         $article->setUser($user);
+        $slug = $sluggerService->generateUniqueSlug($article->getTitle());
+        $article->setSlug($slug);
         $article->setSlug($slug);
 
         $article->setCreatedAt(new \DateTimeImmutable());
