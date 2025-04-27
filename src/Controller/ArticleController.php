@@ -113,13 +113,11 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('app_article_list');
         }
 
-        // 1. Vérifie si déjà liké
         if ($article->isLikedByUser($user)) {
             $this->addFlash('warning', 'Vous avez déjà liké cet article.');
             return $this->redirectToRoute('app_article', ['slug' => $slug]);
         }
 
-        // 2. Crée un ArticleLike et le lie à l'article + à l'utilisateur
         $like = new ArticleLike();
         $like->setArticle($article);
         $like->setUser($user);
@@ -204,6 +202,10 @@ class ArticleController extends AbstractController
         if (!$this->isCsrfTokenValid('generate-pdf' . $article->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
         }
+
+        if (!$article || !$article->getUser()) {
+            throw $this->createNotFoundException('L\'article ou l\'utilisateur associé n\'existe pas');
+        }
         
         $bus->dispatch(new GeneratePdfMessage('article', (string) $article->getId()));
 
@@ -257,6 +259,8 @@ class ArticleController extends AbstractController
         $article->setTitle($data['title']);
         $article->setContent($data['content']);
         $article->setSlug($data['slug']);
+        $user = $this->getUser();
+        $article->setUser($user);
 
         $em->persist($article);
         $em->flush();
@@ -289,13 +293,19 @@ class ArticleController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function apiDelete(Article $article, EntityManagerInterface $em): JsonResponse
     {
+        $user = $this->getUser();
+
+        if ($article->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cet article.');
+        }
+
         $em->remove($article);
         $em->flush();
 
         return $this->json(['message' => 'Article supprimé']);
     }
 
-    #[Route('/api/articles/{id}', name: 'api_article_delete', methods: ['GET'])]
+    #[Route('/api/articles/{id}', name: 'api_article_get_one', methods: ['GET'])]
     public function apiGet(Article $article): JsonResponse
     {
         return $this->json([

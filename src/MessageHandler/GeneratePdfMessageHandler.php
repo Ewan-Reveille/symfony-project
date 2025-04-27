@@ -41,6 +41,14 @@ class GeneratePdfMessageHandler
         // Save to disk
         $output = $dompdf->output();
         file_put_contents(__DIR__ . "/../../public/pdfs/{$type}_{$payload}.pdf", $output);
+        $article = $this->articleRepo->find($payload);
+        if (!$article || !$article->getUser()) {
+            throw new \Exception('Article ou utilisateur non trouvé');
+        }
+        $user = $article->getUser();
+        if (!$user->getEmail()) {
+            throw new \Exception('L\'email de l\'utilisateur est manquant');
+        }
     }
 
     private function renderArtist(string|int $name): string

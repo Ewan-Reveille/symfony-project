@@ -15,9 +15,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 class AppAuthAuthenticator extends AbstractLoginFormAuthenticator
 {
+    private JWTManager $jwtManager;
+
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
@@ -44,13 +47,9 @@ class AppAuthAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+        $jwt = $this->jwtManager->create($token->getUser());
 
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        return new JsonResponse(['token' => $jwt]);
     }
 
     protected function getLoginUrl(Request $request): string

@@ -19,6 +19,9 @@ class Article
     {
         $this->articleLikes = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        if (!$this->created_at) {
+            $this->created_at = new \DateTimeImmutable();
+        }
     }
     
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleLike::class, orphanRemoval: true)]
@@ -44,12 +47,11 @@ class Article
     #[ORM\Column(length: 255, nullable:true)]
     private ?string $artist = null;
 
-    #[ORM\Column]
+    #[ORM\Column(
+        options: ["default" => "CURRENT_TIMESTAMP"]
+    )]
     private ?\DateTimeImmutable $created_at = null;
 
-    /**
-     * @var Collection<int, Comment>
-     */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', orphanRemoval: true)]
     private Collection $comments;
 
