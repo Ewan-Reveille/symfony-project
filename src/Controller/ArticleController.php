@@ -18,6 +18,8 @@ use App\Form\CommentType;
 use App\Message\GeneratePdfMessage;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Entity\Article;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ArticleController extends AbstractController
 {
@@ -227,4 +229,80 @@ class ArticleController extends AbstractController
         return $this->file($path, $filename);
     }
 
+    #[Route('/api/articles', name: 'api_article_list', methods: ['GET'])]
+    public function apiList(ArticleRepository $articleRepository): JsonResponse
+    {
+        $articles = $articleRepository->findAll();
+        $data = [];
+
+        foreach ($articles as $article) {
+            $data[] = [
+                'id' => $article->getId(),
+                'title' => $article->getTitle(),
+                'content' => $article->getContent(),
+                'slug' => $article->getSlug(),
+            ];
+        }
+
+        return $this->json($data);
+    }
+
+    #[Route('/api/articles', name: 'api_article_create', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function apiCreate(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $article = new Article();
+        $article->setTitle($data['title']);
+        $article->setContent($data['content']);
+        $article->setSlug($data['slug']);
+
+        $em->persist($article);
+        $em->flush();
+
+        return $this->json(['message' => 'Article créé', 'id' => $article->getId()], 201);
+    }
+
+    #[Route('/api/articles/{id}', name: 'api_article_update', methods: ['PUT'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function apiUpdate(Request $request, Article $article, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['title'])) {
+            $article->setTitle($data['title']);
+        }
+        if (isset($data['content'])) {
+            $article->setContent($data['content']);
+        }
+        if (isset($data['slug'])) {
+            $article->setSlug($data['slug']);
+        }
+
+        $em->flush();
+
+        return $this->json(['message' => 'Article mis à jour']);
+    }
+
+    #[Route('/api/articles/{id}', name: 'api_article_delete', methods: ['DELETE'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function apiDelete(Article $article, EntityManagerInterface $em): JsonResponse
+    {
+        $em->remove($article);
+        $em->flush();
+
+        return $this->json(['message' => 'Article supprimé']);
+    }
+
+    #[Route('/api/articles/{id}', name: 'api_article_delete', methods: ['GET'])]
+    public function apiGet(Article $article): JsonResponse
+    {
+        return $this->json([
+            'id' => $article->getId(),
+            'title' => $article->getTitle(),
+            'content' => $article->getContent(),
+            'slug' => $article->getSlug(),
+        ]);
+    }
 }

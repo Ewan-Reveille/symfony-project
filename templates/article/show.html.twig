@@ -28,13 +28,17 @@
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
                         <button type="submit" class="btn btn-danger">Supprimer</button>
                     </form>
-                    <a href="{{ path('app_article_export_pdf', {'slug': article.slug}) }}" class="btn btn-outline-secondary">Exporter en PDF</a>
+                    <form method="post" action="{{ path('app_article_export_pdf', {'slug': article.slug}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
+                        <button type="submit" class="btn btn-outline-secondary">Exporter en PDF</button>
+                    </form>
                 {% elseif app.user %}
-                    <form action="{{ path('app_article_like', {'slug': article.slug}) }}" method="POST">
-                        <input type="hidden" name="_token" value="{{ csrf_token('like' ~ article.id) }}">
-                        <button type="submit" class="btn btn-outline-success">J'aime</button>
+                    <form method="post" action="{{ path('app_article_export_pdf', {'slug': article.slug}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
+                        <button type="submit" class="btn btn-outline-secondary">Exporter en PDF</button>
                     </form>
                 {% endif %}
+
             </div>
 
             <h2>Commentaires</h2>

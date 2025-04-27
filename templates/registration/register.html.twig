@@ -16,7 +16,7 @@
 
     <div class="mb-3">
         {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.password, {'attr': {'class': 'form-control', 'type': 'password'}}) }}
         {{ form_errors(form.password, {'attr': {'class': 'text-danger'}}) }}
     </div>
 

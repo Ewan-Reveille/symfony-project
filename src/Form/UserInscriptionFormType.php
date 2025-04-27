@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 class UserInscriptionFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,7 +22,7 @@ class UserInscriptionFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('password')
+            ->add('password', PasswordType::class)
             ->add('nom')
             ->add('prenom')
             ->add('birth_date', null, [
