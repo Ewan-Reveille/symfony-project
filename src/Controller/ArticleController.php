@@ -149,6 +149,17 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $article->getSlug();
+            $slug = preg_replace('~[^\pL\d]+~u', '-', $slug);
+            if (function_exists('iconv')) {
+                $slug = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+            }
+            $slug = preg_replace('~[^-\w]+~', '', $slug);
+            $slug = trim($slug, '-');
+            $slug = preg_replace('~-+~', '-', $slug);
+            $slug = strtolower($slug);
+            $article->setSlug($slug);
+
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -254,11 +265,22 @@ class ArticleController extends AbstractController
     public function apiCreate(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        $slug = preg_replace('~[^\pL\d]+~u', '-', $data['slug']);
+        if (function_exists('iconv')) {
+            $slug = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+        }
+        $slug = preg_replace('~[^-\w]+~', '', $slug);
+        $slug = trim($slug, '-');
 
+        // 5. Remove duplicate -
+        $slug = preg_replace('~-+~', '-', $slug);
+
+        // 6. Lowercase
+        $slug = strtolower($slug);
         $article = new Article();
         $article->setTitle($data['title']);
         $article->setContent($data['content']);
-        $article->setSlug($data['slug']);
+        $article->setSlug($slug);
         $user = $this->getUser();
         $article->setUser($user);
 
