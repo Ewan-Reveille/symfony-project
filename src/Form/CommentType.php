@@ -13,7 +13,7 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, [
-                'label' => 'Votre commentaire',
+                'label' => 'Your comment',
             ]);
         ;
     }

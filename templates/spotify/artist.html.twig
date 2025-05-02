@@ -1,42 +1,83 @@
-<h1>{{ name }}</h1>
-<img src="{{ image }}" alt="{{ name }} image" />
-<p>Gender: {{ description }}</p>
-<p>{{ followers }} followers</p>
+{% extends 'base.html.twig' %}
 
-<h2>Articles about {{ name }}</h2>
+{% block title %}
+    {{ name }} – Artist Profile
+{% endblock %}
 
-{% if articles is not empty %}
-    <ul>
-    {% for article in articles %}
-        <li>
-            <a href="{{ path('app_article', {'slug': article.slug}) }}">{{ article.title }}</a>
-            <p>{{ article.content|slice(0, 100) }}...</p>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No articles available for this artist.</p>
-{% endif %}
-
-<form action="{{ path('export_artist_pdf', {'name': name}) }}" method="POST">
-    <button type="submit">📄 Export this artist as PDF</button>
-</form>
-{% if app.user %}
-    <h3>Create an Article about {{ name }}</h3>
-    <form action="{{ path('app_create_article', {'artistName': name}) }}" method="POST">
-        <div>
-            <label for="title">Article Title:</label>
-            <input type="text" id="title" name="title" required />
+{% block body %}
+<div class="container py-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-4 text-center mb-3 mb-md-0">
+            <img src="{{ image }}" alt="{{ name }} image" class="img-fluid rounded shadow" style="max-height: 300px;">
         </div>
-
-        <div>
-            <label for="content">Content:</label>
-            <textarea id="content" name="content" rows="5" required></textarea>
+        <div class="col-md-8">
+            <h1 class="display-4 fw-bold">{{ name }}</h1>
+            <p class="text-muted fs-5">Gender: {{ description }}</p>
+            <p class="fs-5"><i class="bi bi-people-fill"></i> {{ followers }} followers</p>
         </div>
+    </div>
 
-        <button type="submit">Create Article</button>
-    </form>
-{% else %}
-    <p>You must be logged in to create an article.</p>
-    <a href={{ path('app_login')}}>Login here</a>
-{% endif %}
+    <div class="mb-5">
+        <h2 class="mb-4">📰 Articles about {{ name }}</h2>
+
+        {% if articles is not empty %}
+            <div class="row g-4">
+                {% for article in articles %}
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ path('app_article', {'slug': article.slug}) }}" class="text-decoration-none text-primary">
+                                        {{ article.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted">{{ article.content|slice(0, 100) }}...</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">No articles available for this artist.</div>
+        {% endif %}
+    </div>
+
+    <div class="text-center mb-5">
+        <form action="{{ path('export_artist_pdf', {'name': name}) }}" method="POST">
+            <button type="submit" class="btn btn-outline-secondary btn-lg">
+                📄 Export this artist as PDF
+            </button>
+        </form>
+    </div>
+
+    {% if app.user %}
+        <div class="card shadow-lg">
+            <div class="card-header bg-dark text-white">
+                <h3 class="mb-0">✍️ Create an article about {{ name }}</h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ path('app_create_article', {'artistName': name}) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Article Title:</label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Write a title about {{ name }}" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content:</label>
+                        <textarea id="content" name="content" rows="6" class="form-control" placeholder="Write something..." required></textarea>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success">Publish Article</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning mt-4">
+            You must be logged in to create an article.
+        </div>
+        <a href="{{ path('app_login') }}" class="btn btn-primary">Login here</a>
+    {% endif %}
+</div>
+{% endblock %}

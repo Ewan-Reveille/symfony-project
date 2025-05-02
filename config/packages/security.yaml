@@ -34,11 +34,11 @@ security:
       form_login:
         login_path: app_login
         check_path: app_login
+        enable_csrf: false
+        csrf_token_id: authenticate
         username_parameter: email
         password_parameter: password
-        csrf_parameter: _csrf_token
-        csrf_token_id: authenticate
-        enable_csrf: true
+
       logout:
         path: app_logout
  

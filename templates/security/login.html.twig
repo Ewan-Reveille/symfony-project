@@ -1,37 +1,80 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Log in{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
+    <div class="card-body p-4">
+      {% if error %}
+        <div class="alert alert-danger">
+          {{ error.messageKey|trans(error.messageData, 'security') }}
         </div>
-    {% endif %}
+      {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="text" value="{{ last_email }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+      {% if app.user %}
+        <div class="alert alert-info">
+          You are logged in as <strong>{{ app.user.userIdentifier }}</strong>,
+          <a href="{{ path('app_logout') }}" class="alert-link">Logout</a>
+        </div>
+      {% endif %}
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+      <h1 class="h4 mb-4 text-center">Please sign in</h1>
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
+      <form method="post" novalidate>
+        <div class="mb-3">
+          <label for="inputEmail" class="form-label">Email address</label>
+          <input
+            type="email"
+            id="inputEmail"
+            name="email"
+            class="form-control"
+            value="{{ last_email }}"
+            autocomplete="email"
+            required
+            autofocus
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input
+            type="password"
+            id="inputPassword"
+            name="password"
+            class="form-control"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="form-check mb-4">
+          <input
+            type="checkbox"
+            id="rememberMe"
+            name="_remember_me"
+            class="form-check-input"
+          >
+          <label for="rememberMe" class="form-check-label">Remember me</label>
+        </div>
+
+        <div class="d-grid">
+          <button class="btn btn-primary btn-lg" type="submit">
+            Sign in
+          </button>
+        </div>
+      </form>
+
+      <hr class="my-4">
+
+      <div class="text-center">
+        <small class="text-muted">
+          Don’t have an account? <a href="{{ path('app_register') }}">Register here</a>
+        </small>
+      </div>
     </div>
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+  </div>
+</div>
 {% endblock %}

@@ -4,85 +4,99 @@
 
 {% block body %}
 <div class="container my-5">
-    <div class="card shadow-sm rounded-2xl">
-        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-            <h1 class="h2 mb-0">{{ article.title }}</h1>
-            <small class="text-muted">{{ article.createdAt | date('d F Y') }}</small>
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">{{ article.title }}</h1>
+                <small class="text-muted">{{ article.createdAt | date('d F Y') }}</small>
+            </div>
+            {% if app.user and article.user and app.user.id and (app.user.id == article.user.id or 'ROLE_ADMIN' in app.user.roles) %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ path('app_article_edit', {'slug': article.slug}) }}">✏️ Edit</a></li>
+                        <li>
+                            <form action="{{ path('app_article_delete', {'slug': article.slug}) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                                <button type="submit" class="dropdown-item text-danger">🗑️ Delete</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
+
         <div class="card-body">
-            <div class="mb-3 text-secondary">
+            <div class="mb-3 text-muted small">
                 {% if article.user and article.user.email %}
-                <span>Auteur&nbsp;: {{ article.user.email }}</span>
+                    Auteur&nbsp;: <strong>{{ article.user.email }}</strong>
                 {% endif %}
                 {% if article.artist %}
-                    &nbsp;|&nbsp;<span>Artiste&nbsp;: {{ article.artist }}</span>
+                    &nbsp;|&nbsp;Artiste&nbsp;: <strong>{{ article.artist }}</strong>
                 {% endif %}
-                &nbsp;|&nbsp;<span>{{ article.getLikesCount() }} like{{ article.getLikesCount() > 1 ? 's' }}</span>
+                &nbsp;|&nbsp;<i class="bi bi-heart-fill text-danger"></i> {{ article.getLikesCount() }} like{{ article.getLikesCount() > 1 ? 's' }}
             </div>
-            <div class="article-content mb-4">
+
+            <div class="article-content mb-5 fs-5">
                 {{ article.content | raw }}
             </div>
 
-            <div class="d-flex gap-2">
-                {% if app.user and article.user and app.user.id and (app.user.id == article.user.id or 'ROLE_ADMIN' in app.user.roles) %}
-                    <a href="{{ path('app_article_edit', {'slug': article.slug}) }}" class="btn btn-primary">Modifier</a>
-                    <form action="{{ path('app_article_delete', {'slug': article.slug}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                    </form>
+            {% if app.user %}
+                <div class="mb-4 d-flex flex-wrap gap-2">
                     <form method="post" action="{{ path('app_article_export_pdf', {'slug': article.slug}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
-                        <button type="submit" class="btn btn-outline-secondary">Exporter en PDF</button>
+                        <button type="submit" class="btn btn-outline-primary">
+                            📄 Export as a PDF
+                        </button>
                     </form>
-                {% elseif app.user %}
-                    <form method="post" action="{{ path('app_article_export_pdf', {'slug': article.slug}) }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
-                        <button type="submit" class="btn btn-outline-secondary">Exporter en PDF</button>
-                    </form>
-                {% endif %}
 
+                    {% if pdfExists %}
+                        <a href="{{ asset('pdfs/' ~ pdfFilename) }}" class="btn btn-outline-success">
+                            ✅ Download PDF
+                        </a>
+                    {% elseif generationRequested %}
+                        <span class="text-muted">⏳ PDF is generating</span>
+                    {% endif %}
+                </div>
+            {% endif %}
 
-            </div>
+            <hr>
 
-            <h2>Commentaires</h2>
+            <h2 class="h5 mt-4 mb-3">💬 Comments</h2>
 
             {% for comment in article.comments %}
-                <div class="comment">
-                    <strong>{{ comment.user.email }}</strong> — <em>{{ comment.createdAt|date('d/m/Y H:i') }}</em>
-                    <p>{{ comment.content }}</p>
+                <div class="border rounded p-3 mb-3">
+                    <div class="mb-1">
+                        <strong>{{ comment.user.email }}</strong>
+                        <span class="text-muted small">— {{ comment.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    <p class="mb-0">{{ comment.content }}</p>
                 </div>
             {% else %}
-                <p>Pas encore de commentaire.</p>
+                <p class="text-muted">No comments... For now</p>
             {% endfor %}
 
             {% if app.user %}
-                {{ form_start(form) }}
-                    {{ form_row(form.content) }}
-                    <button type="submit">Poster mon commentaire</button>
-                {{ form_end(form) }}
+                <div class="card my-4">
+                    <div class="card-body">
+                        <h3 class="h6 mb-3">Add a comment</h3>
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_row(form.content) }}
+                            </div>
+                            <button class="btn btn-primary" type="submit">Post my comment</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
             {% else %}
-                <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour commenter.</p>
+                <p class="text-muted">👉 <a href="{{ path('app_login') }}">Sign-in</a> to comment.</p>
             {% endif %}
 
-            {% if app.user %}
-                {% if pdfExists %}
-                    <a href="{{ asset('pdfs/' ~ pdfFilename) }}" class="btn btn-outline-secondary">
-                        Télécharger le PDF
-                    </a>
-                {% elseif generationRequested %}
-                    <p class="text-muted">PDF en cours de génération… Revenez dans quelques instants.</p>
-                {% else %}
-                    <form action="{{ path('app_article_export_pdf', { slug: article.slug }) }}" method="POST">
-                        <input type="hidden" name="_token" value="{{ csrf_token('generate-pdf' ~ article.id) }}">
-                        <button type="submit" class="btn btn-outline-primary">
-                            Créer un PDF
-                        </button>
-                    </form>
-                {% endif %}
-            {% endif %}
-
-
-            <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-4">&larr; Retour aux articles</a>
+            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary mt-4">
+                &larr; Back to the articles
+            </a>
         </div>
     </div>
 </div>
